@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verificador de Loteria</title>
+  <script>
+    function verificarLoteria() {
+      var numerosLoteriaInput = document.getElementById('numerosLoteria');
+      var numerosLoteria = numerosLoteriaInput.value.split(" ").map(Number);
+
+      var fileInput = document.getElementById('fileInput');
+      var file = fileInput.files[0];
+
+      if (file) {
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+          var jogos = e.target.result;
+          var linhas = jogos.trim().split('\n');
+
+          var resultadosContainer = document.getElementById('resultadosContainer');
+          resultadosContainer.innerHTML = "<h2>Loteria resultado: " + numerosLoteria.join(' ') + "</h2>";
+          resultadosContainer.innerHTML += "<h2>Resultados:</h2>";
+
+          linhas.forEach((linha, index) => {
+            var numerosJogo = linha.trim().split('-').map(Number);
+            var cont = 0;
+
+            resultadosContainer.innerHTML += "<div>";
+            resultadosContainer.innerHTML += "<h3>Jogo: " + (index + 1) + " | Números: " + numerosJogo.join(' ') + "</h3>";
+
+            numerosJogo.forEach(numero => {
+              if (numerosLoteria.includes(numero)) {
+                cont++;
+              }
+            });
+
+            resultadosContainer.innerHTML += "<p>Acertos: " + cont + "</p>";
+            resultadosContainer.innerHTML += "</div>";
+          });
+        };
+
+        reader.readAsText(file);
+      }
+    }
+  </script>
+</head>
+<body>
+  <form>
+    <label for="numerosLoteria">Digite os números da loteria separados por espaço:</label>
+    <input type="text" id="numerosLoteria" name="numerosLoteria" required>
+    
+    <label for="fileInput">Selecione o arquivo jogos.txt:</label>
+    <input type="file" id="fileInput" name="fileInput" accept=".txt" required>
+
+    <button type="button" onclick="verificarLoteria()">Verificar Loteria</button>
+  </form>
+
+  <div id="resultadosContainer"></div>
+</body>
+</html>
