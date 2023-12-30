@@ -1,62 +1,142 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verificador de Loteria</title>
-  <script>
-    function verificarLoteria() {
-      var numerosLoteriaInput = document.getElementById('numerosLoteria');
-      var numerosLoteria = numerosLoteriaInput.value.split(" ").map(Number);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificador de Loteria</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
 
-      var fileInput = document.getElementById('fileInput');
-      var file = fileInput.files[0];
+        h1 {
+            text-align: center;
+            color: #4caf50;
+        }
 
-      if (file) {
-        var reader = new FileReader();
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
 
-        reader.onload = function(e) {
-          var jogos = e.target.result;
-          var linhas = jogos.trim().split('\n');
+        label,
+        input,
+        button {
+            display: block;
+            margin-bottom: 10px;
+        }
 
-          var resultadosContainer = document.getElementById('resultadosContainer');
-          resultadosContainer.innerHTML = "<h2>Loteria resultado: " + numerosLoteria.join(' ') + "</h2>";
-          resultadosContainer.innerHTML += "<h2>Resultados:</h2>";
+        input,
+        button {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
 
-          linhas.forEach((linha, index) => {
-            var numerosJogo = linha.trim().split('-').map(Number);
-            var cont = 0;
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            border-radius: 20px;
+            transition: background-color 0.3s ease;
+        }
 
-            resultadosContainer.innerHTML += "<div>";
-            resultadosContainer.innerHTML += "<h3>Jogo: " + (index + 1) + " | Números: " + numerosJogo.join(' ') + "</h3>";
+        button:hover {
+            background-color: #45a049;
+        }
 
-            numerosJogo.forEach(numero => {
-              if (numerosLoteria.includes(numero)) {
-                cont++;
-              }
-            });
+        #resultadosContainer {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 
-            resultadosContainer.innerHTML += "<p>Acertos: " + cont + "</p>";
-            resultadosContainer.innerHTML += "</div>";
-          });
-        };
+    <script>
+        async function verificarLoteria() {
+            var resultadosContainer = document.getElementById('resultadosContainer');
+            resultadosContainer.innerHTML = "<h2>Calculando...</h2>";
 
-        reader.readAsText(file);
-      }
-    }
-  </script>
+            var numerosLoteriaInput = document.getElementById('numerosLoteria');
+            var numerosLoteria = numerosLoteriaInput.value.split(" ").map(Number);
+
+            var fileInput = document.getElementById('fileInput');
+            var file = fileInput.files[0];
+
+            if (file) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    var jogos = e.target.result;
+                    var linhas = jogos.trim().split('\n');
+
+                    resultadosContainer.innerHTML = "<h2>Loteria resultado: " + numerosLoteria.join(' ') + "</h2>";
+                    resultadosContainer.innerHTML += "<h2>Seu resultado:</h2>";
+
+                    linhas.forEach((linha, index) => {
+                        var numerosJogo = linha.trim().split('-').map(Number);
+                        var cont = 0;
+
+                        resultadosContainer.innerHTML += "<div>";
+                        resultadosContainer.innerHTML += "<h3>Jogo: " + (index + 1) + " | Números: " + numerosJogo.join(' ') + "</h3>";
+
+                        numerosJogo.forEach(numero => {
+                            if (numerosLoteria.includes(numero)) {
+                                cont++;
+                            }
+                        });
+
+                        resultadosContainer.innerHTML += "<p>Acertos: " + cont + "</p>";
+                        resultadosContainer.innerHTML += "</div>";
+                    });
+                };
+
+                reader.readAsText(file);
+            }
+        }
+    </script>
 </head>
+
 <body>
-  <form>
-    <label for="numerosLoteria">Digite os números da loteria separados por espaço:</label>
-    <input type="text" id="numerosLoteria" name="numerosLoteria" required>
-    
-    <label for="fileInput">Selecione o arquivo jogos.txt:</label>
-    <input type="file" id="fileInput" name="fileInput" accept=".txt" required>
+    <div id="logo">
+        <h1>Lottocheck</h1>
+    </div>
 
-    <button type="button" onclick="verificarLoteria()">Verificar Loteria</button>
-  </form>
+    <form>
+        <label for="numerosLoteria">Números sorteados</label>
+        <input type="text" id="numerosLoteria" name="numerosLoteria" required
+            placeholder="Digite os números da loteria separados por espaço">
 
-  <div id="resultadosContainer"></div>
+        <label for="fileInput">Selecione o arquivo jogos.txt</label>
+        <input type="file" id="fileInput" name="fileInput" accept=".txt" required>
+
+        <button type="button" onclick="verificarLoteria()">Verificar Loteria</button>
+
+        <p>Exemplo jogo.txt
+        </p>
+        <p> 01-08-23-30-31-56<br />
+            02-07-08-12-19-26-38<br />
+            05-06-16-26-55-60<br />
+            04-25-39-43-55-57-58-59</p>
+    </form>
+
+    <div id="resultadosContainer"></div>
 </body>
+
 </html>
