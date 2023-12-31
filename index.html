@@ -103,6 +103,11 @@
                         });
 
                         resultadosContainer.innerHTML += "<p>Acertos: " + cont + "</p>";
+                        if (cont >= 4) {
+                            resultadosContainer.lastChild.style.backgroundColor = "#66ff66";
+                            resultadosContainer.lastChild.style.border = "2px solid #33cc33";
+                            resultadosContainer.lastChild.style.boxShadow = "0 0 10px rgba(0, 128, 0, 0.3)";
+                        }
                         resultadosContainer.innerHTML += "</div>";
                     });
                 };
