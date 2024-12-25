@@ -34,7 +34,7 @@ def randomdotorg(n, min, max):
             print(f"Status Code: {response.status_code}, Response: {response.text}")
     return None
 
-ticket = []
+ticket = set()
 
 print("Running....")
 
